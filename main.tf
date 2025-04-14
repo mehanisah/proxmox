@@ -35,6 +35,15 @@ provider "proxmox" {
   pm_tls_insecure     = var.pm_tls_insecure
 }
 
+output "vault_id" {
+  value = data.vault_kv_secret_v2.api_token.data["id"]
+}
+
+output "vault_secret" {
+  value     = data.vault_kv_secret_v2.api_token.data["secret"]
+  sensitive = true
+}
+
 module "vm_instance" {
   source = "./modules/vm_instance"
   vm_count = 1

@@ -28,13 +28,6 @@ data "vault_kv_secret_v2" "api_token" {
   name  = "proxmox/${var.environment}" 
 }
 
-provider "proxmox" {
-  pm_api_url          = "https://${var.proxmox_server_host}:8006/api2/json"
-  pm_api_token_id     = data.vault_kv_secret_v2.api_token.data["id"]
-  pm_api_token_secret = data.vault_kv_secret_v2.api_token.data["secret"]
-  pm_tls_insecure     = var.pm_tls_insecure
-}
-
 output "vault_id" {
   value = data.vault_kv_secret_v2.api_token.data["id"]
 }
@@ -42,6 +35,13 @@ output "vault_id" {
 output "vault_secret" {
   value     = data.vault_kv_secret_v2.api_token.data["secret"]
   sensitive = true
+}
+
+provider "proxmox" {
+  pm_api_url          = "https://${var.proxmox_server_host}:8006/api2/json"
+  pm_api_token_id     = data.vault_kv_secret_v2.api_token.data["id"]
+  pm_api_token_secret = data.vault_kv_secret_v2.api_token.data["secret"]
+  pm_tls_insecure     = var.pm_tls_insecure
 }
 
 module "vm_instance" {
